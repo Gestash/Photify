@@ -25,12 +25,14 @@ class HomeViewModel(private val gallerySaver: GallerySaver) :
 
     private fun getPictures(): ArrayList<String> {
         val appDir = gallerySaver.getDir()
-        val files = appDir.listFiles()
+        val files = appDir.listFiles() ?: null
 
         val list = arrayListOf<String>()
-        for (index in files) {
-            val path = index.absolutePath
-            list.add(path)
+        if (files != null) {
+            for (index in files) {
+                val path = index.absolutePath
+                list.add(path)
+            }
         }
         return list
     }
