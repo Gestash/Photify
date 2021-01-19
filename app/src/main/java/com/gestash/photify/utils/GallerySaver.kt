@@ -26,20 +26,12 @@ class GallerySaver(private val context: Context) {
     }
 
 
-    fun returnDir(): File {
+    fun getDir(): File {
         val root = Environment.getExternalStorageDirectory()
         val galleryDir = File(root, "PhotiFy")
         if (!galleryDir.exists()) {
             galleryDir.mkdir()
         }
         return galleryDir
-//        val file = File(galleryDir, cachedFile.name)
-//        file.createNewFile()
-//        file.writeBytes(cachedFile.readBytes())
-//
-//        MediaScannerConnection.scanFile(context, arrayOf(file.path), null) { path, uri ->
-//            Log.i("ExternalStorage", "Scanned $path:");
-//            Log.i("ExternalStorage", "-> uri=$uri");
-//        }
     }
 }

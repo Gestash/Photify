@@ -11,6 +11,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.bumptech.glide.MemoryCategory
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
@@ -31,7 +32,6 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-
         requestCameraPermission()
         requestStoragePermission()
     }
@@ -108,7 +108,11 @@ class MainActivity : AppCompatActivity() {
                     // in your app.
                     Toast.makeText(this, "Permission GRANTED", Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(this, "Permission denied to read your External storage", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this,
+                        "Permission denied to read your External storage",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     // Explain to the user that the feature is unavailable because
                     // the features requires a permission that the user has denied.
                     // At the same time, respect the user's decision. Don't link to
@@ -126,7 +130,11 @@ class MainActivity : AppCompatActivity() {
                     // in your app.
                     Toast.makeText(this, "Permission GRANTED", Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(this, "Permission denied to read your External storage", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this,
+                        "Permission denied to read your External storage",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     // Explain to the user that the feature is unavailable because
                     // the features requires a permission that the user has denied.
                     // At the same time, respect the user's decision. Don't link to

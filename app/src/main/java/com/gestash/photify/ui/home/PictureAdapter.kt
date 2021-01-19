@@ -9,7 +9,7 @@ import com.gestash.photify.databinding.PictureItemBinding
 import com.gestash.photify.ui.PictureInfo
 
 
-class PictureAdapter(val onClickListener: OnClickListener) :
+class PictureAdapter(private val onClickListener: OnClickListener) :
     ListAdapter<PictureInfo, PictureAdapter.PictureViewHolder>(DiffCallback) {
 
     class PictureViewHolder(private var binding: PictureItemBinding) :

@@ -24,7 +24,7 @@ import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-class DashboardFragment() : Fragment() {
+class DashboardFragment : Fragment() {
 
     private val dashboardViewModel: DashboardViewModel by inject()
     private val gallerySaver: GallerySaver by inject()
@@ -47,7 +47,7 @@ class DashboardFragment() : Fragment() {
 
         binding.takePhotoButton.setOnClickListener { takePhoto() }
         startCamera()
-        outputDirectory = gallerySaver.returnDir()
+        outputDirectory = gallerySaver.getDir()
 
         cameraExecutor = Executors.newSingleThreadExecutor()
         return binding.root
