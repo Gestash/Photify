@@ -20,14 +20,15 @@
             android:id="@+id/galleryView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            android:layout_marginBottom="50dp"
             android:scrollbars="vertical"
-            app:spanCount="2"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="@id/start_grid"
             app:layout_constraintRight_toRightOf="@id/end_grid"
             app:layout_constraintTop_toTopOf="parent"
             app:pictures="@{viewModel.pictures}"
+            app:spanCount="2"
             tools:listitem="@layout/picture_item" />
 
         <androidx.constraintlayout.widget.Guideline

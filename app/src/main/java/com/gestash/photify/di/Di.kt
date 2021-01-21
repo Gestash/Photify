@@ -2,6 +2,7 @@ package com.gestash.photify.di
 
 import com.gestash.photify.ui.dashboard.DashboardViewModel
 import com.gestash.photify.ui.home.HomeViewModel
+import com.gestash.photify.ui.sliders.ScreenSlidePageViewModel
 import com.gestash.photify.utils.FileNameGenerator
 import com.gestash.photify.utils.GallerySaver
 import com.gestash.photify.utils.MarginDecoration
@@ -14,6 +15,7 @@ object Di {
     private val viewModelModule = module {
         viewModel { DashboardViewModel( androidContext(), get()) }
         viewModel { HomeViewModel( get()) }
+        viewModel { ScreenSlidePageViewModel() }
 
     }
 

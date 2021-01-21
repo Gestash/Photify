@@ -7,11 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.camera.core.CameraSelector
-import androidx.camera.core.ImageCapture
-import androidx.camera.core.ImageCaptureException
-import androidx.camera.core.Preview
+import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -23,6 +19,10 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
+
 
 class DashboardFragment : Fragment() {
 
@@ -34,6 +34,8 @@ class DashboardFragment : Fragment() {
 
     private lateinit var outputDirectory: File
     private lateinit var cameraExecutor: ExecutorService
+    private var lensFacing = CameraSelector.LENS_FACING_BACK
+    private var cameraProvider: ProcessCameraProvider? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,8 +46,9 @@ class DashboardFragment : Fragment() {
         binding = FragmentDashboardBinding.inflate(inflater)
         binding.lifecycleOwner = this
         binding.viewmodel = dashboardViewModel
-
+        uploadCamera()
         binding.takePhotoButton.setOnClickListener { takePhoto() }
+        binding.switchButton.setOnClickListener { switchCamera() }
         startCamera()
         outputDirectory = gallerySaver.getDir()
 
@@ -53,34 +56,70 @@ class DashboardFragment : Fragment() {
         return binding.root
     }
 
+    private fun switchCamera() {
+//        binding.switchButton.isEnabled = false
+        lensFacing = if (CameraSelector.LENS_FACING_FRONT == lensFacing) {
+            CameraSelector.LENS_FACING_BACK
+        } else {
+            CameraSelector.LENS_FACING_FRONT
+        }
+        startCamera()
+    }
+
+    private fun uploadCamera() {
+        val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
+        cameraProviderFuture.addListener(Runnable {
+
+            cameraProvider = cameraProviderFuture.get()
+
+            lensFacing = when {
+                hasBackCamera() -> CameraSelector.LENS_FACING_BACK
+                hasFrontCamera() -> CameraSelector.LENS_FACING_FRONT
+                else -> throw IllegalStateException("Back and front camera are unavailable")
+            }
+            updateCameraSwitchButton()
+        }, ContextCompat.getMainExecutor(requireContext()))
+    }
+
+    private fun hasBackCamera(): Boolean {
+        return cameraProvider?.hasCamera(CameraSelector.DEFAULT_BACK_CAMERA) ?: false
+    }
+
+    private fun hasFrontCamera(): Boolean {
+        return cameraProvider?.hasCamera(CameraSelector.DEFAULT_FRONT_CAMERA) ?: false
+    }
+
+    private fun updateCameraSwitchButton() {
+        try {
+            binding.switchButton.isEnabled = hasBackCamera() && hasFrontCamera()
+        } catch (exception: CameraInfoUnavailableException) {
+            binding.switchButton.isEnabled = false
+        }
+    }
+
     private fun takePhoto() {
-        // Get a stable reference of the modifiable image capture use case
         val imageCapture = imageCapture ?: return
 
-        // Create time-stamped output file to hold the image
         val photoFile = File(
             outputDirectory,
-            SimpleDateFormat(FILENAME_FORMAT, Locale.US
-            ).format(System.currentTimeMillis()) + ".jpg")
+            SimpleDateFormat(
+                FILENAME_FORMAT, Locale.US
+            ).format(System.currentTimeMillis()) + ".jpg"
+        )
 
-//        gallerySaver.saveToGallery(photoFile)
 
-        // Create output options object which contains file + metadata
         val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
-
-        // Set up image capture listener, which is triggered after photo has
-        // been taken
         imageCapture.takePicture(
-            outputOptions, ContextCompat.getMainExecutor(requireContext()), object : ImageCapture.OnImageSavedCallback {
+            outputOptions,
+            ContextCompat.getMainExecutor(requireContext()),
+            object : ImageCapture.OnImageSavedCallback {
                 override fun onError(exc: ImageCaptureException) {
                     Log.e(TAG, "Photo capture failed: ${exc.message}", exc)
                 }
 
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                     val savedUri = Uri.fromFile(photoFile)
-                    val msg = "Photo capture succeeded: $savedUri"
-                    Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
-                    Log.d(TAG, msg)
+                    Log.d(TAG, "Photo capture succeeded: $savedUri")
                 }
             })
         MediaScannerConnection.scanFile(context, arrayOf(photoFile.path), null) { path, uri ->
@@ -90,6 +129,10 @@ class DashboardFragment : Fragment() {
     }
 
     private fun startCamera() {
+//        val metrics = DisplayMetrics().also { binding.viewFinder.display.getRealMetrics(it) }
+//        val screenAspectRatio = aspectRatio(metrics.widthPixels, metrics.heightPixels)
+//        val rotation = binding.viewFinder.display.rotation
+
         val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
 
         cameraProviderFuture.addListener(Runnable {
@@ -98,36 +141,56 @@ class DashboardFragment : Fragment() {
 
             // Preview
             val preview = Preview.Builder()
+//                .setTargetAspectRatio(screenAspectRatio)
+//                .setTargetRotation(rotation)
                 .build()
                 .also {
                     it.setSurfaceProvider(binding.viewFinder.surfaceProvider)
                 }
 
             imageCapture = ImageCapture.Builder()
+                .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
+//                .setTargetAspectRatio(screenAspectRatio)
+//                .setTargetRotation(rotation)
                 .build()
 
             // Select back camera as a default
-            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+            val cameraSelector =
+                CameraSelector.Builder().requireLensFacing(lensFacing).build()
 
             try {
                 // Unbind use cases before rebinding
                 cameraProvider.unbindAll()
 
                 // Bind use cases to camera
-                cameraProvider.bindToLifecycle(
-                    this, cameraSelector, preview, imageCapture)
-
-            } catch(exc: Exception) {
+                cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture//, imageAnalyzer
+                )
+                preview.setSurfaceProvider(binding.viewFinder.surfaceProvider)
+            } catch (exc: Exception) {
                 Log.e(TAG, "Use case binding failed", exc)
             }
 
         }, ContextCompat.getMainExecutor(requireContext()))
     }
 
+    private fun aspectRatio(width: Int, height: Int): Int {
+        val previewRatio = max(width, height).toDouble() / min(width, height)
+        if (abs(previewRatio - RATIO_4_3_VALUE) <= abs(previewRatio - RATIO_16_9_VALUE)) {
+            return AspectRatio.RATIO_4_3
+        }
+        return AspectRatio.RATIO_16_9
+    }
 
-    companion object{
+    override fun onDestroyView() {
+        super.onDestroyView()
+        cameraExecutor.shutdown()
+    }
+
+    companion object {
         private const val TAG = "DashboardFragment"
         private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
+        private const val RATIO_4_3_VALUE = 4.0 / 3.0
+        private const val RATIO_16_9_VALUE = 16.0 / 9.0
     }
 
 }
