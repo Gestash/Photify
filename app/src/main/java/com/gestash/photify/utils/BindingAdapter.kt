@@ -5,10 +5,13 @@ import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.Target.SIZE_ORIGINAL
 import com.gestash.photify.ui.PictureInfo
 import com.gestash.photify.ui.home.PictureAdapter
 import com.gestash.photify.ui.sliders.ScreenSliderAdapter
 import com.gestash.photify.ui.sliders.TestAdapter
+import com.github.chrisbanes.photoview.PhotoView
+import com.squareup.picasso.Picasso
 
 @BindingAdapter("pictures")
 fun bindRecyclerView(recyclerView: RecyclerView, data: List<PictureInfo>?) {
@@ -37,9 +40,16 @@ fun bindImage(pictureView: ImageView, imageUri: String?) {
 
 }
 @BindingAdapter("image")
-fun bindSlidersImage(imageView: ImageView, image: String?) {
+fun bindSlidersImage(imageView: PhotoView, image: String?) {
     Glide.with(imageView.context)
         .load(image)
+
         .into(imageView)
+
+//    Picasso.get()
+//        .load(image)
+//        .fit()
+//        .centerInside()
+//        .into(imageView)
 
 }

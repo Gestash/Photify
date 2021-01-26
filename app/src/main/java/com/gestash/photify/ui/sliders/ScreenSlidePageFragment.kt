@@ -6,11 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.viewpager2.widget.ViewPager2
 import com.gestash.photify.databinding.FragmentScreenSlidePageBinding
 import com.gestash.photify.ui.home.HomeViewModel
 import com.gestash.photify.utils.MarginDecoration
-import org.intellij.lang.annotations.JdkConstants
 import org.koin.android.ext.android.inject
 
 class ScreenSlidePageFragment : Fragment(){
@@ -29,8 +29,12 @@ class ScreenSlidePageFragment : Fragment(){
         binding.viewModel = viewModel
         viewModel.loadPicturesPath()
 
+
+
         binding.pager.adapter = ScreenSliderAdapter()
         binding.pager.addItemDecoration(marginDecoration)
+        val snapHelper = PagerSnapHelper() // Or PagerSnapHelper
+        snapHelper.attachToRecyclerView(binding.pager)
         binding.pager.hasFixedSize()
 //
 //
