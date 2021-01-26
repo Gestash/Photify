@@ -11,6 +11,8 @@ import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.gestash.photify.databinding.FragmentDashboardBinding
 import com.gestash.photify.utils.GallerySaver
 import org.koin.android.ext.android.inject
@@ -19,9 +21,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import kotlin.math.abs
-import kotlin.math.max
-import kotlin.math.min
 
 
 class DashboardFragment : Fragment() {
@@ -107,7 +106,6 @@ class DashboardFragment : Fragment() {
             ).format(System.currentTimeMillis()) + ".jpg"
         )
 
-
         val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
         imageCapture.takePicture(
             outputOptions,
@@ -119,6 +117,7 @@ class DashboardFragment : Fragment() {
 
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                     val savedUri = Uri.fromFile(photoFile)
+                    setGalleryThumbnail(savedUri)
                     Log.d(TAG, "Photo capture succeeded: $savedUri")
                 }
             })
@@ -129,20 +128,12 @@ class DashboardFragment : Fragment() {
     }
 
     private fun startCamera() {
-//        val metrics = DisplayMetrics().also { binding.viewFinder.display.getRealMetrics(it) }
-//        val screenAspectRatio = aspectRatio(metrics.widthPixels, metrics.heightPixels)
-//        val rotation = binding.viewFinder.display.rotation
-
         val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
 
         cameraProviderFuture.addListener(Runnable {
-            // Used to bind the lifecycle of cameras to the lifecycle owner
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
 
-            // Preview
             val preview = Preview.Builder()
-//                .setTargetAspectRatio(screenAspectRatio)
-//                .setTargetRotation(rotation)
                 .build()
                 .also {
                     it.setSurfaceProvider(binding.viewFinder.surfaceProvider)
@@ -150,19 +141,14 @@ class DashboardFragment : Fragment() {
 
             imageCapture = ImageCapture.Builder()
                 .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
-//                .setTargetAspectRatio(screenAspectRatio)
-//                .setTargetRotation(rotation)
                 .build()
 
-            // Select back camera as a default
             val cameraSelector =
                 CameraSelector.Builder().requireLensFacing(lensFacing).build()
 
             try {
-                // Unbind use cases before rebinding
                 cameraProvider.unbindAll()
 
-                // Bind use cases to camera
                 cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture//, imageAnalyzer
                 )
                 preview.setSurfaceProvider(binding.viewFinder.surfaceProvider)
@@ -173,12 +159,15 @@ class DashboardFragment : Fragment() {
         }, ContextCompat.getMainExecutor(requireContext()))
     }
 
-    private fun aspectRatio(width: Int, height: Int): Int {
-        val previewRatio = max(width, height).toDouble() / min(width, height)
-        if (abs(previewRatio - RATIO_4_3_VALUE) <= abs(previewRatio - RATIO_16_9_VALUE)) {
-            return AspectRatio.RATIO_4_3
+    private fun setGalleryThumbnail(uri: Uri) {
+        val thumbnail = binding.photoViewButton
+
+        thumbnail.post {
+            Glide.with(thumbnail)
+                .load(uri)
+                .apply(RequestOptions.circleCropTransform())
+                .into(thumbnail)
         }
-        return AspectRatio.RATIO_16_9
     }
 
     override fun onDestroyView() {
@@ -189,8 +178,6 @@ class DashboardFragment : Fragment() {
     companion object {
         private const val TAG = "DashboardFragment"
         private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
-        private const val RATIO_4_3_VALUE = 4.0 / 3.0
-        private const val RATIO_16_9_VALUE = 16.0 / 9.0
     }
 
 }

@@ -28,24 +28,40 @@
         </androidx.camera.view.PreviewView>
 
 
-        <ImageView
+        <ImageButton
             android:id="@+id/takePhotoButton"
             android:layout_width="@dimen/buttons_sizes"
             android:layout_height="@dimen/buttons_sizes"
             android:layout_marginBottom="@dimen/margin_botton_for_buttons"
+            android:scaleType="fitCenter"
+            android:background="@android:color/transparent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:srcCompat="@android:drawable/ic_menu_camera" />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/switchButton"
             android:layout_width="@dimen/buttons_sizes"
             android:layout_height="@dimen/buttons_sizes"
+            android:scaleType="fitCenter"
+            android:background="@android:color/transparent"
             app:layout_constraintBottom_toBottomOf="@+id/takePhotoButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/takePhotoButton"
             app:srcCompat="@android:drawable/ic_popup_sync" />
+
+        <ImageButton
+            android:id="@+id/photoViewButton"
+            android:layout_width="@dimen/buttons_sizes"
+            android:layout_height="@dimen/buttons_sizes"
+            android:background="@drawable/ic_outer_circle"
+            android:padding="@dimen/stroke_small"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="@+id/takePhotoButton"
+            app:layout_constraintEnd_toStartOf="@+id/takePhotoButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/takePhotoButton" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
