@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_slider">
+    app:startDestination="@+id/navigation_camera">
 
     <fragment
         android:id="@+id/navigation_gallery"
@@ -19,12 +19,19 @@
 
     <action
         android:id="@+id/action_camera_to_slider"
-        app:destination="@id/navigation_slider" />
+        app:destination="@id/navigation_slider"
+        app:popUpTo="@layout/fragment_camera"/>
     </fragment>
 
     <fragment
         android:id="@+id/navigation_slider"
         android:name="com.gestash.photify.ui.sliders.ScreenSlidePageFragment"
         android:label="@string/title_slider"
-        tools:layout="@layout/fragment_screen_slide_page" />
+        tools:layout="@layout/fragment_screen_slide_page" >
+        <action
+            android:id="@+id/action_slider_to_gallery"
+            app:destination="@id/navigation_gallery"
+            app:popUpTo="@layout/fragment_screen_slide_page"/>
+    </fragment>
+
 </navigation>

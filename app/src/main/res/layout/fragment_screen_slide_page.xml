@@ -32,7 +32,7 @@
             app:layout_constraintVertical_bias="0.0" />
 
         <ImageButton
-            android:id="@+id/back_button"
+            android:id="@+id/backButton"
             android:layout_width="@dimen/round_button_medium"
             android:layout_height="@dimen/round_button_medium"
             android:layout_marginStart="@dimen/margin_xsmall"
@@ -44,31 +44,42 @@
             app:srcCompat="@drawable/ic_back" />
 
         <ImageButton
-            android:id="@+id/share_button"
+            android:id="@+id/allPhotosButton"
             android:layout_width="@dimen/round_button_medium"
             android:layout_height="@dimen/round_button_medium"
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginEnd="@dimen/margin_xsmall"
             android:background="@android:color/transparent"
             android:scaleType="fitCenter"
-            app:layout_constraintBottom_toBottomOf="@+id/delete_button"
-            app:layout_constraintEnd_toStartOf="@+id/delete_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@android:drawable/ic_menu_gallery" />
+
+        <ImageButton
+            android:id="@+id/shareButton"
+            android:layout_width="@dimen/round_button_medium"
+            android:layout_height="@dimen/round_button_medium"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="@+id/deleteButton"
+            app:layout_constraintEnd_toStartOf="@+id/deleteButton"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:srcCompat="@drawable/ic_share" />
 
         <ImageButton
-            android:id="@+id/delete_button"
+            android:id="@+id/deleteButton"
             android:layout_width="@dimen/round_button_medium"
             android:layout_height="@dimen/round_button_medium"
-            android:layout_marginBottom="32dp"
-            android:background="@android:color/transparent"
+            android:layout_marginBottom="@dimen/margin_botton_for_buttons"
             android:scaleType="fitCenter"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/share_button"
+            app:layout_constraintStart_toEndOf="@+id/shareButton"
             app:srcCompat="@drawable/ic_delete" />
 
+<!--        android:background="@android:color/transparent"-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

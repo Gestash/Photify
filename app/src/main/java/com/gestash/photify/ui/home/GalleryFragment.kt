@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.gestash.photify.databinding.FragmentGalleryBinding
 import com.gestash.photify.ui.MainViewModel
 import com.gestash.photify.utils.MarginDecoration
@@ -31,6 +32,10 @@ class GalleryFragment : Fragment() {
         binding.galleryView.adapter = PictureAdapter(PictureAdapter.OnClickListener {
 
         })
+
+        binding.backButtonFromGallery.setOnClickListener {
+            this.findNavController().navigateUp()
+        }
         return binding.root
     }
 }

@@ -3,7 +3,6 @@ package com.gestash.photify.ui.dashboard
 import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Bundle
-import android.util.DisplayMetrics
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -147,7 +146,7 @@ class CameraFragment : Fragment() {
     }
 
     private fun startCamera() {
-        val metrics = DisplayMetrics().also { binding.viewFinder.display.getRealMetrics(it) }
+//        val metrics = DisplayMetrics().also { binding.viewFinder.display.getRealMetrics(it) }
 //        val screenAspectRatio = aspectRatio(metrics.widthPixels, metrics.heightPixels)
 //        val rotation = binding.viewFinder.display.rotation
 
