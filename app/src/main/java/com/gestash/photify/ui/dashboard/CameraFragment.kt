@@ -3,6 +3,7 @@ package com.gestash.photify.ui.dashboard
 import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -23,6 +24,9 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
 
 
 class CameraFragment : Fragment() {
@@ -134,7 +138,20 @@ class CameraFragment : Fragment() {
         }
     }
 
+    private fun aspectRatio(width: Int, height: Int): Int {
+        val previewRatio = max(width, height).toDouble() / min(width, height)
+        if (abs(previewRatio - RATIO_4_3_VALUE) <= abs(previewRatio - RATIO_16_9_VALUE)) {
+            return AspectRatio.RATIO_4_3
+        }
+        return AspectRatio.RATIO_16_9
+    }
+
     private fun startCamera() {
+        val metrics = DisplayMetrics().also { binding.viewFinder.display.getRealMetrics(it) }
+//        val screenAspectRatio = aspectRatio(metrics.widthPixels, metrics.heightPixels)
+//        val rotation = binding.viewFinder.display.rotation
+
+
         val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
 
         cameraProviderFuture.addListener(Runnable {
@@ -185,6 +202,8 @@ class CameraFragment : Fragment() {
     companion object {
         private const val TAG = "DashboardFragment"
         private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
+        private const val RATIO_4_3_VALUE = 4.0 / 3.0
+        private const val RATIO_16_9_VALUE = 16.0 / 9.0
     }
 
 }
