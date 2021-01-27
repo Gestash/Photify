@@ -22,7 +22,6 @@
             android:layout_height="@dimen/round_button_medium"
             android:layout_marginStart="@dimen/margin_xsmall"
             android:layout_marginTop="@dimen/margin_small"
-            android:background="@android:color/transparent"
             android:scaleType="fitCenter"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"

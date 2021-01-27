@@ -41,6 +41,8 @@ class CameraFragment : Fragment() {
     private var lensFacing = CameraSelector.LENS_FACING_BACK
     private var cameraProvider: ProcessCameraProvider? = null
 
+    private var lastTakenPicture = 0
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -50,6 +52,13 @@ class CameraFragment : Fragment() {
         binding = FragmentCameraBinding.inflate(inflater)
         binding.lifecycleOwner = this
         binding.viewmodel = viewModel
+        viewModel.pictures.observe(viewLifecycleOwner,{ pictures ->
+            val lastPictureInfo = pictures.indexOf(pictures.last())
+
+            lastTakenPicture = lastPictureInfo
+
+        })
+
         uploadCamera()
         binding.takePhotoButton.setOnClickListener { takePhoto() }
         binding.switchButton.setOnClickListener { switchCamera() }

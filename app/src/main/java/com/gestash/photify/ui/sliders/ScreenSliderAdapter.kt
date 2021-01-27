@@ -7,10 +7,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.gestash.photify.databinding.PagerItemBinding
 import com.gestash.photify.ui.PictureInfo
-import com.gestash.photify.ui.home.PictureAdapter
 
 class ScreenSliderAdapter : ListAdapter<PictureInfo, ScreenSliderAdapter.ScreenSliderViewHolder>(DiffCallback) {
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScreenSliderViewHolder {
         return ScreenSliderViewHolder(PagerItemBinding.inflate(LayoutInflater.from(parent.context)))

@@ -9,7 +9,12 @@
         android:id="@+id/navigation_gallery"
         android:name="com.gestash.photify.ui.home.GalleryFragment"
         android:label="@string/title_gallery"
-        tools:layout="@layout/fragment_gallery" />
+        tools:layout="@layout/fragment_gallery" >
+        <action
+            android:id="@+id/action_gallery_to_slider"
+            app:destination="@id/navigation_slider"
+            app:popUpTo="@layout/fragment_camera"/>
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_camera"

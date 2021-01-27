@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.PagerSnapHelper
 import com.gestash.photify.databinding.FragmentScreenSlidePageBinding
 import com.gestash.photify.ui.MainViewModel
@@ -21,6 +22,9 @@ class ScreenSlidePageFragment : Fragment(){
     private val viewModel: MainViewModel by inject()
     private lateinit var binding: FragmentScreenSlidePageBinding
     private val marginDecoration: MarginDecoration by inject()
+
+//    private val args: ScreenSlidePageFragmentArgs by navArgs()
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,6 +49,9 @@ class ScreenSlidePageFragment : Fragment(){
         binding.backButton.setOnClickListener {
             this.findNavController().navigateUp()
         }
+
+//        val targetPhoto = args.targetImage
+
 
         binding.deleteButton.setOnClickListener { deletePhoto() }
 
