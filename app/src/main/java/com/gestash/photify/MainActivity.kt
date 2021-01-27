@@ -9,9 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.bumptech.glide.MemoryCategory
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
@@ -27,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_slider
+                R.id.navigation_gallery, R.id.navigation_camera, R.id.navigation_slider
             )
         )
 //        setupActionBarWithNavController(navController, appBarConfiguration)

@@ -11,9 +11,11 @@ import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.gestash.photify.databinding.FragmentDashboardBinding
+import com.gestash.photify.databinding.FragmentCameraBinding
+import com.gestash.photify.ui.MainViewModel
 import com.gestash.photify.utils.GallerySaver
 import org.koin.android.ext.android.inject
 import java.io.File
@@ -23,11 +25,11 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 
-class DashboardFragment : Fragment() {
+class CameraFragment : Fragment() {
 
-    private val dashboardViewModel: DashboardViewModel by inject()
+    private val viewModel: MainViewModel by inject()
     private val gallerySaver: GallerySaver by inject()
-    private lateinit var binding: FragmentDashboardBinding
+    private lateinit var binding: FragmentCameraBinding
 
     private var imageCapture: ImageCapture? = null
 
@@ -42,12 +44,13 @@ class DashboardFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        binding = FragmentDashboardBinding.inflate(inflater)
+        binding = FragmentCameraBinding.inflate(inflater)
         binding.lifecycleOwner = this
-        binding.viewmodel = dashboardViewModel
+        binding.viewmodel = viewModel
         uploadCamera()
         binding.takePhotoButton.setOnClickListener { takePhoto() }
         binding.switchButton.setOnClickListener { switchCamera() }
+        binding.photoViewButton.setOnClickListener { goToPhotoView() }
         startCamera()
         outputDirectory = gallerySaver.getDir()
 
@@ -63,6 +66,10 @@ class DashboardFragment : Fragment() {
             CameraSelector.LENS_FACING_FRONT
         }
         startCamera()
+    }
+
+    private fun goToPhotoView() {
+        this.findNavController().navigate(CameraFragmentDirections.actionCameraToSlider())
     }
 
     private fun uploadCamera() {

@@ -1,10 +1,12 @@
 package com.gestash.photify.utils
 
+import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target.SIZE_ORIGINAL
 import com.gestash.photify.ui.PictureInfo
 import com.gestash.photify.ui.home.PictureAdapter
@@ -40,16 +42,17 @@ fun bindImage(pictureView: ImageView, imageUri: String?) {
 
 }
 @BindingAdapter("image")
-fun bindSlidersImage(imageView: PhotoView, image: String?) {
+fun bindSlidersImage(imageView: ImageView, image: String?) {
     Glide.with(imageView.context)
         .load(image)
-
         .into(imageView)
+}
 
-//    Picasso.get()
-//        .load(image)
-//        .fit()
-//        .centerInside()
-//        .into(imageView)
+@BindingAdapter("lastimage")
+fun bindImage(thumbnail: ImageButton, imageUri: String?) {
+    Glide.with(thumbnail.context)
+        .load(imageUri)
+        .apply(RequestOptions.circleCropTransform())
+        .into(thumbnail)
 
 }

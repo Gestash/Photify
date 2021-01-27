@@ -8,13 +8,13 @@
 
         <variable
             name="viewmodel"
-            type="com.gestash.photify.ui.dashboard.DashboardViewModel" />
+            type="com.gestash.photify.ui.MainViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.dashboard.DashboardFragment">
+        tools:context=".ui.dashboard.CameraFragment">
 
         <androidx.camera.view.PreviewView
             android:id="@+id/viewFinder"
@@ -58,6 +58,7 @@
             android:background="@drawable/ic_outer_circle"
             android:padding="@dimen/stroke_small"
             android:scaleType="fitCenter"
+            app:lastimage="@{viewmodel.imageUri}"
             app:layout_constraintBottom_toBottomOf="@+id/takePhotoButton"
             app:layout_constraintEnd_toStartOf="@+id/takePhotoButton"
             app:layout_constraintStart_toStartOf="parent"

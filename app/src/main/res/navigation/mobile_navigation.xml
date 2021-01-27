@@ -6,16 +6,21 @@
     app:startDestination="@+id/navigation_slider">
 
     <fragment
-        android:id="@+id/navigation_home"
-        android:name="com.gestash.photify.ui.home.HomeFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        android:id="@+id/navigation_gallery"
+        android:name="com.gestash.photify.ui.home.GalleryFragment"
+        android:label="@string/title_gallery"
+        tools:layout="@layout/fragment_gallery" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.gestash.photify.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_camera"
+        android:name="com.gestash.photify.ui.dashboard.CameraFragment"
+        android:label="@string/title_camera"
+        tools:layout="@layout/fragment_camera" >
+
+    <action
+        android:id="@+id/action_camera_to_slider"
+        app:destination="@id/navigation_slider" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_slider"

@@ -8,13 +8,13 @@
 
         <variable
             name="viewModel"
-            type="com.gestash.photify.ui.home.HomeViewModel" />
+            type="com.gestash.photify.ui.MainViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.home.HomeFragment">
+        tools:context=".ui.home.GalleryFragment">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/galleryView"

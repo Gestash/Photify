@@ -5,26 +5,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.gestash.photify.databinding.FragmentHomeBinding
+import com.gestash.photify.databinding.FragmentGalleryBinding
+import com.gestash.photify.ui.MainViewModel
 import com.gestash.photify.utils.MarginDecoration
 import org.koin.android.ext.android.inject
 
-class HomeFragment : Fragment() {
+class GalleryFragment : Fragment() {
 
-    private val homeViewModel: HomeViewModel by inject()
+    private val homeViewModel: MainViewModel by inject()
     private val marginDecoration: MarginDecoration by inject()
 
-    private lateinit var binding: FragmentHomeBinding
+    private lateinit var binding: FragmentGalleryBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentHomeBinding.inflate(inflater)
+        binding = FragmentGalleryBinding.inflate(inflater)
         binding.lifecycleOwner = this
         binding.viewModel = homeViewModel
-        homeViewModel.loadPicturesPath()
 
         binding.galleryView.addItemDecoration(marginDecoration)
         binding.galleryView.hasFixedSize()
