@@ -33,7 +33,8 @@ class GalleryFragment : Fragment() {
         binding.galleryView.addItemDecoration(marginDecoration)
         binding.galleryView.hasFixedSize()
         binding.galleryView.adapter = PictureAdapter(PictureAdapter.OnClickListener {
-            this.findNavController().navigate(GalleryFragmentDirections.actionGalleryToSlider())
+            val imageUri = it.imageUri ?: ""
+            this.findNavController().navigate(GalleryFragmentDirections.actionGalleryToSlider(imageUri))
         })
 
         binding.backButtonFromGallery.setOnClickListener {

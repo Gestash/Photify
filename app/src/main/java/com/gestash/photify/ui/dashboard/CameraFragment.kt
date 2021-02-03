@@ -42,6 +42,7 @@ class CameraFragment : Fragment() {
     private var cameraProvider: ProcessCameraProvider? = null
 
     private var lastTakenPicture = 0
+    private var savedLastUri = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -81,7 +82,7 @@ class CameraFragment : Fragment() {
     }
 
     private fun goToPhotoView() {
-        this.findNavController().navigate(CameraFragmentDirections.actionCameraToSlider())
+        this.findNavController().navigate(CameraFragmentDirections.actionCameraToSlider(savedLastUri))
     }
 
     private fun uploadCamera() {
@@ -137,6 +138,7 @@ class CameraFragment : Fragment() {
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                     val savedUri = Uri.fromFile(photoFile)
                     setGalleryThumbnail(savedUri)
+                    savedLastUri = savedUri.toString()
                     Log.d(TAG, "Photo capture succeeded: $savedUri")
                 }
             })

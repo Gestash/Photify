@@ -1,29 +1,31 @@
 package com.gestash.photify.ui.sliders
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.MimeTypeMap
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.PagerSnapHelper
 import com.gestash.photify.databinding.FragmentScreenSlidePageBinding
 import com.gestash.photify.ui.MainViewModel
-import com.gestash.photify.ui.dashboard.CameraFragmentDirections
-import com.gestash.photify.ui.sliders.ScreenSlidePageFragmentDirections.actionSliderToGallery
+import com.gestash.photify.ui.sliders.ScreenSlidePageFragmentDirections.Companion.actionSliderToGallery
 import com.gestash.photify.utils.MarginDecoration
 import org.koin.android.ext.android.inject
+import java.io.File
 
 
-class ScreenSlidePageFragment : Fragment(){
+class ScreenSlidePageFragment : Fragment() {
 
     private val viewModel: MainViewModel by inject()
     private lateinit var binding: FragmentScreenSlidePageBinding
     private val marginDecoration: MarginDecoration by inject()
+    private var uri = ""
 
-//    private val args: ScreenSlidePageFragmentArgs by navArgs()
+    private lateinit var mediaList: MutableList<String>
 
 
     override fun onCreateView(
@@ -35,24 +37,26 @@ class ScreenSlidePageFragment : Fragment(){
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
-        binding.pager.adapter = ScreenSliderAdapter()
+        val adapter = ScreenSliderAdapter()
+        binding.pager.adapter = adapter
         binding.pager.addItemDecoration(marginDecoration)
         val snapHelper = PagerSnapHelper() // Or PagerSnapHelper
         snapHelper.attachToRecyclerView(binding.pager)
         binding.pager.hasFixedSize()
+        binding.pager.smoothScrollToPosition(10)
 
+        viewModel.pictures.observe(viewLifecycleOwner, { list ->
+            uri = list.first().imageUri ?: ""
+        })
         binding.allPhotosButton.setOnClickListener {
             this.findNavController().navigate(actionSliderToGallery())
 
         }
-        binding.shareButton.setOnClickListener {  }
         binding.backButton.setOnClickListener {
             this.findNavController().navigateUp()
         }
 
-//        val targetPhoto = args.targetImage
-
-
+        binding.shareButton.setOnClickListener { sharePhoto() }
         binding.deleteButton.setOnClickListener { deletePhoto() }
 
         return binding.root
@@ -78,6 +82,19 @@ class ScreenSlidePageFragment : Fragment(){
 
 //        return false
 
+    }
+
+    private fun sharePhoto() {
+        val intent = Intent().apply {
+            val file = File(uri)
+            val mediaType = MimeTypeMap.getSingleton()
+                .getMimeTypeFromExtension(file.extension)
+            putExtra(Intent.EXTRA_STREAM, uri)
+            type = mediaType
+            action = Intent.ACTION_SEND
+            flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+        }
+        startActivity(Intent.createChooser(intent, "Share using"))
     }
 }
 

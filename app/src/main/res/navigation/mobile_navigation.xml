@@ -21,11 +21,11 @@
         android:name="com.gestash.photify.ui.dashboard.CameraFragment"
         android:label="@string/title_camera"
         tools:layout="@layout/fragment_camera" >
-
     <action
         android:id="@+id/action_camera_to_slider"
         app:destination="@id/navigation_slider"
         app:popUpTo="@layout/fragment_camera"/>
+
     </fragment>
 
     <fragment
@@ -37,6 +37,9 @@
             android:id="@+id/action_slider_to_gallery"
             app:destination="@id/navigation_gallery"
             app:popUpTo="@layout/fragment_screen_slide_page"/>
+        <argument
+            android:name="root_directory"
+            app:argType="string" />
     </fragment>
 
 </navigation>
