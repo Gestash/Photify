@@ -41,7 +41,6 @@ class CameraFragment : Fragment() {
     private var lensFacing = CameraSelector.LENS_FACING_BACK
     private var cameraProvider: ProcessCameraProvider? = null
 
-    private var lastTakenPicture = 0
     private var savedLastUri = ""
 
     override fun onCreateView(
@@ -53,12 +52,6 @@ class CameraFragment : Fragment() {
         binding = FragmentCameraBinding.inflate(inflater)
         binding.lifecycleOwner = this
         binding.viewmodel = viewModel
-        viewModel.pictures.observe(viewLifecycleOwner,{ pictures ->
-            val lastPictureInfo = pictures.indexOf(pictures.last())
-
-            lastTakenPicture = lastPictureInfo
-
-        })
 
         uploadCamera()
         binding.takePhotoButton.setOnClickListener { takePhoto() }
@@ -82,6 +75,7 @@ class CameraFragment : Fragment() {
     }
 
     private fun goToPhotoView() {
+        Log.d("set navars"," navargs setted saveduri: $savedLastUri")
         this.findNavController().navigate(CameraFragmentDirections.actionCameraToSlider(savedLastUri))
     }
 
@@ -138,8 +132,9 @@ class CameraFragment : Fragment() {
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                     val savedUri = Uri.fromFile(photoFile)
                     setGalleryThumbnail(savedUri)
-                    savedLastUri = savedUri.toString()
+                    savedLastUri = savedUri.path.toString()
                     Log.d(TAG, "Photo capture succeeded: $savedUri")
+                    Log.d(TAG, "Photo capture savedLastUri: $savedLastUri")
                 }
             })
         MediaScannerConnection.scanFile(context, arrayOf(photoFile.path), null) { path, uri ->

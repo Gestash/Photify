@@ -1,17 +1,20 @@
 package com.gestash.photify.ui.sliders
 
-import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.MimeTypeMap
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.PagerSnapHelper
 import com.gestash.photify.databinding.FragmentScreenSlidePageBinding
 import com.gestash.photify.ui.MainViewModel
+import com.gestash.photify.ui.PictureInfo
+import com.gestash.photify.ui.sliders.ScreenSlidePageFragmentDirections.Companion.actionSliderToCamera
 import com.gestash.photify.ui.sliders.ScreenSlidePageFragmentDirections.Companion.actionSliderToGallery
 import com.gestash.photify.utils.MarginDecoration
 import org.koin.android.ext.android.inject
@@ -25,8 +28,7 @@ class ScreenSlidePageFragment : Fragment() {
     private val marginDecoration: MarginDecoration by inject()
     private var uri = ""
 
-    private lateinit var mediaList: MutableList<String>
-
+    private val args: ScreenSlidePageFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,17 +45,22 @@ class ScreenSlidePageFragment : Fragment() {
         val snapHelper = PagerSnapHelper() // Or PagerSnapHelper
         snapHelper.attachToRecyclerView(binding.pager)
         binding.pager.hasFixedSize()
-        binding.pager.smoothScrollToPosition(10)
 
+        val id = args.currentFile
+        Log.d("Uri from navars", "id  from navars: $id ")
+        uri = "file://$id"
         viewModel.pictures.observe(viewLifecycleOwner, { list ->
-            uri = list.first().imageUri ?: ""
+
+            val index = list.indexOf(PictureInfo(id))
+            binding.pager.scrollToPosition(index)
+
         })
         binding.allPhotosButton.setOnClickListener {
             this.findNavController().navigate(actionSliderToGallery())
 
         }
         binding.backButton.setOnClickListener {
-            this.findNavController().navigateUp()
+            this.findNavController().navigate(actionSliderToCamera())
         }
 
         binding.shareButton.setOnClickListener { sharePhoto() }
@@ -63,24 +70,24 @@ class ScreenSlidePageFragment : Fragment() {
     }
 
     private fun deletePhoto() {
-        val alert = AlertDialog.Builder(context)
-        alert.setTitle("Delete file")
-        alert.setMessage("Are you sure you want to delete this file?")
-        alert.setCancelable(false)
-        // the Yes button Fails to display
-        // the Yes button Fails to display
-        alert.setPositiveButton("Yes") { dialog, which -> // compiler warning this code is an Unchecked Cast
-
-        }
-
-        // the Cancel button Fails to display
-
-        // the Cancel button Fails to display
-        alert.setNegativeButton(
-            "Cancel"
-        ) { dialog, which -> dialog.cancel() }
-
-//        return false
+//        val alert = AlertDialog.Builder(context)
+//        alert.setTitle("Delete file")
+//        alert.setMessage("Are you sure you want to delete this file?")
+//        alert.setCancelable(false)
+//        // the Yes button Fails to display
+//        // the Yes button Fails to display
+//        alert.setPositiveButton("Yes") { dialog, which -> // compiler warning this code is an Unchecked Cast
+//
+//        }
+//
+//        // the Cancel button Fails to display
+//
+//        // the Cancel button Fails to display
+//        alert.setNegativeButton(
+//            "Cancel"
+//        ) { dialog, which -> dialog.cancel() }
+//
+////        return false
 
     }
 

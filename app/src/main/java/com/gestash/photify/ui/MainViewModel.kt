@@ -21,7 +21,7 @@ class MainViewModel(private val gallerySaver: GallerySaver) :
         loadPicturesPath()
     }
 
-    fun loadPicturesPath() {
+    private fun loadPicturesPath() {
         try {
             val pictures = getPictures()
             val picturesInfo = pictures.map { PictureInfo(it) }.asReversed()
